@@ -12,7 +12,7 @@ export default function InputGameData({ playerName, teamName }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate('/prediction', { state: { name: playerName, opponent: gameData.opponent, date: gameData.date, home: gameData.home } });
+        navigate('/prediction', { state: { name: playerName, team: teamName, opponent: gameData.opponent, date: gameData.date, home: gameData.home } });
     }
 
     const teams = [
@@ -88,7 +88,7 @@ export default function InputGameData({ playerName, teamName }) {
                 </select>
             </div>
             <div>
-                <button onClick={handleClick}>Get Predictions!</button>
+                <button onClick={handleClick}>Get predictions!</button>
             </div>
         </div>
     )

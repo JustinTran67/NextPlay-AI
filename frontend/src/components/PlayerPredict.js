@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function PlayerPredict({ name, opponent, date, home }) {
+export default function PlayerPredict({ name, team, opponent, date, home }) {
 
     const [predictionData, setPredictionData] = useState(null);
     
@@ -61,6 +62,49 @@ export default function PlayerPredict({ name, opponent, date, home }) {
                 ) : (
                      <p>Loading prediction...</p>
                 )}
+            <div>
+                <RecommendedPlayers team={team} opponent={opponent} />
+            </div>
+        </div>
+    )
+}
+
+function RecommendedPlayers({ team, opponent }) {
+    const [recommendedPlayers, setRecommendedPlayers] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8000/api/players/')
+            .then(response => response.json())
+            .then(data => {
+                const filteredPlayers = data.filter(player => player.team === team || player.team === opponent);
+                setRecommendedPlayers(filteredPlayers);
+            })
+    }, [team, opponent]);
+
+    return (
+        <div>
+            <h3>Your next recommended predictions</h3>
+            <ul>
+                {recommendedPlayers.map((player) => 
+                    <li key={player.id}>
+                        <PlayerCard name={player.name} team={player.team} />
+                    </li>
+                )}
+            </ul>
+        </div>
+    )
+}
+
+function PlayerCard({ name, team }) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate('/input', { state: { playerName: name, teamName: team } });
+    }
+
+    return (
+        <div>
+            <button onClick={handleClick}>{name} | {team}</button>
         </div>
     )
 }

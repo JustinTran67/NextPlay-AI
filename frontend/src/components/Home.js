@@ -22,7 +22,7 @@ export default function Home() {
 
 function SearchBar({filterPlayers, setFilterPlayers}) {
     return (
-        <div>
+        <div className="search-bar">
             <input type="text" value={filterPlayers} onChange={(e) => setFilterPlayers(e.target.value)} placeholder="Search players to get projections..." />
         </div>
     )
@@ -30,7 +30,7 @@ function SearchBar({filterPlayers, setFilterPlayers}) {
 
 function PlayerList({playerData, filterPlayers}) {
     return (
-        <div>
+        <square className="player-list">
             <h2>Players</h2>
             <ul>
                 {playerData.map((player) => 
@@ -41,7 +41,7 @@ function PlayerList({playerData, filterPlayers}) {
                     : null}
                 )}
             </ul>
-        </div>
+        </square>
     )
 }
 
@@ -54,7 +54,7 @@ function PlayerCard({ name, team }) {
 
     return (
         <div>
-            <button onClick={handleClick}> {name} | {team}</button>
+            <button onClick={handleClick}>{name} | {team}</button>
         </div>
     )
 }
