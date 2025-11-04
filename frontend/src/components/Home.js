@@ -49,12 +49,12 @@ function PlayerCard({ name, team }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate('/prediction')
+        navigate('/input', { state: { playerName: name, teamName: team } });
     }
 
     return (
         <div>
-            <button value={name} onClick={handleClick}> {name} | {team}</button>
+            <button onClick={handleClick}> {name} | {team}</button>
         </div>
     )
 }

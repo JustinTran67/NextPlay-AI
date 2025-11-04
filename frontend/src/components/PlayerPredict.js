@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function PlayerPredict() {
+export default function PlayerPredict({ name, opponent, date, home }) {
 
     const [predictionData, setPredictionData] = useState(null);
     
@@ -13,10 +13,10 @@ export default function PlayerPredict() {
                     //'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    'player': 'Austin Reaves',
-                    'opponent': 'Minnesota Timberwolves',
-                    'home': 0,
-                    'game_date': '2025-10-29',
+                    'player': name,
+                    'opponent': opponent,
+                    'home': home,
+                    'game_date': date,
                 }),
             })
                 .then(res => {
@@ -35,7 +35,7 @@ export default function PlayerPredict() {
         };
 
         fetchPrediction();
-    }, []);
+    }, [name, opponent, date, home]);
     
     return (
         <div>
