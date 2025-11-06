@@ -11,7 +11,7 @@ djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
 isort==6.1.0
 joblib==1.5.2
-mccabe==0.7.0
+mccabe==0.7.0f
 mypy_extensions==1.1.0
 mysqlclient==2.2.7
 dj-database-url==1.2.0
@@ -37,3 +37,5 @@ sqlparse==0.5.3
 threadpoolctl==3.6.0
 tomlkit==0.13.3
 tzdata==2025.2
+requests==2.34.0
+huggingface_hub>=0.16.0

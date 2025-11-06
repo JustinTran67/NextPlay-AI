@@ -11,6 +11,11 @@ import os
 from django.conf import settings
 from ml_models.data_preperation import add_recent_average_features
 
+# extras for deployment
+import io
+import requests
+from huggingface_hub import hf_hub_download
+
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
@@ -41,56 +46,53 @@ class PlayerGameStatViewSet(viewsets.ModelViewSet):
     ordering_fields = ['points', 'rebounds', 'assists', 'steals', 'blocks']
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-class PredictionViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny] #TODO: switch back to IsAuthenticatedOrReadOnly later
-    model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'nba_predictor.pkl')
-    model = joblib.load(model_path)
-
-    @action(detail=False, methods=['post'])
-    def predict(self, request):
-        try:
-            data = request.data
-            features = [
-                float(data.get('minutes', 0)),
-                float(data.get('fg_percent', 0)),
-                float(data.get('threep_percent', 0)),
-                float(data.get('ft_percent', 0)),
-                float(data.get('rebounds', 0)),
-                float(data.get('assists', 0)),
-                float(data.get('steals', 0)),
-                float(data.get('blocks', 0)),
-                float(data.get('turnovers', 0)),
-                float(data.get('personal_fouls', 0)),
-            ]
-            prediction = self.model.predict([features])
-            return Response({'predicted_points' : prediction[0]})
-        
-        except KeyError as e:
-            return Response(
-                {'error' : f'Missing field: {str(e)}'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        except Exception as e:
-            return Response(
-                {'error' : str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
 class PlayerPredictionViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny] #TODO: switch back to IsAuthenticatedOrReadOnly later
-    model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'player_multioutput_projection.pkl')
     _model = None
     
-    # lazy loading model to stop memory jam at runserver
     @classmethod
     def getModel(cls):
-        if cls._model is None:
-            cls._model = joblib.load(cls.model_path)
+        if cls._model is not None:
+            return cls._model
+
+        # Try local model first
+        local_model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'player_multioutput_projection.pkl')
+        if os.path.exists(local_model_path):
+            print(f"Loading local model from {local_model_path}")
+            cls._model = joblib.load(local_model_path)
+            return cls._model
+
+        # Try model path from environment variable
+        env_model_path = os.environ.get("MODEL_PATH")
+        if env_model_path and os.path.exists(env_model_path):
+            print(f"Loading model from MODEL_PATH: {env_model_path}")
+            cls._model = joblib.load(env_model_path)
+            return cls._model
+
+        # Download from Hugging Face
+        repo_id = os.environ.get("HF_MODEL_REPO", "your-username/nbamodel")
+        filename = "player_multioutput_projection.pkl"
+        print(f"Downloading model {filename} from Hugging Face repo {repo_id}...")
+        try:
+            model_path = hf_hub_download(
+                repo_id=repo_id,
+                filename=filename,
+                cache_dir=os.environ.get("MODEL_DOWNLOAD_DIR", "/tmp"),  # /tmp for Railway
+            )
+            cls._model = joblib.load(model_path)
+            print(f"Model loaded successfully from Hugging Face: {model_path}")
+        except Exception as e:
+            print(f"Failed to load model from Hugging Face: {e}")
+            cls._model = None
         return cls._model
 
     @action(detail=False, methods=['post'])
     def predict(self, request):
         try:
+            model = self.getModel()
+            if model is None:
+                return Response({'error': 'Model not loaded.'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
             player_name = request.data.get('player')
             opponent = request.data.get('opponent')
             home = request.data.get('home', 1)
@@ -199,8 +201,6 @@ class PlayerPredictionViewSet(viewsets.ModelViewSet):
                 'avg_did_play_last10'
             ]
             features = latest[feature_cols].values.reshape(1, -1)
-
-            model = self.getModel()
             prediction = model.predict(features)[0] #I do this because the model is multi-output
 
             stat_names = [

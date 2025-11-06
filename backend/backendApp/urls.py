@@ -1,13 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PlayerViewSet, SeasonStatViewSet, PredictionViewSet, PlayerGameStatViewSet, PlayerPredictionViewSet
+from .views import PlayerViewSet, SeasonStatViewSet, PlayerGameStatViewSet, PlayerPredictionViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 router = DefaultRouter()
 router.register(r'players', PlayerViewSet)
 router.register(r'stats', SeasonStatViewSet)
 router.register(r'game-stats', PlayerGameStatViewSet)
-router.register(r'predictions', PredictionViewSet, basename='predictions')
 router.register(r'player-predictions', PlayerPredictionViewSet, basename='player-predictions')
 
 urlpatterns = [
