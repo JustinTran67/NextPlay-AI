@@ -45,7 +45,7 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
                     <div>
                         <h2 className="font-bold text-[32px] mb-5">{predictionData.player} vs {predictionData.opponent}</h2>
                     </div>
-                    <div className="w-[200px] rounded-xl p-8 bg-secondary mb-10 font-semibold text-left">
+                    <div className="w-[600px] rounded-xl p-8 bg-secondary mb-10 font-semibold text-left">
                         <p>Minutes: {predictionData.predictions.minutes.toFixed(2)}</p>
                         <p>Points: {Math.round(predictionData.predictions.points)}</p>
                         <p>Assists: {Math.round(predictionData.predictions.assists)}</p>
@@ -112,7 +112,7 @@ function PlayerCard({ name, team }) {
 
     return (
         <div>
-            <button className="rounded-lg p-2 w-[400px] px-4 text-left font-semibold bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out" onClick={handleClick}>{name} | {team}</button>
+            <button className="rounded-lg p-2 w-[400px] px-4 text-left font-semibold bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out mb-2" onClick={handleClick}>{name} | {team}</button>
         </div>
     )
 }

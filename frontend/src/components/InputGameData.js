@@ -94,8 +94,8 @@ export default function InputGameData({ playerName, teamName }) {
                     <option value="11">November</option>
                     <option value="12">December</option>
                 </select>
-                <input className="rounded-lg h-[40px] w-[200px] px-4 bg-accent placeholder-silver m-1" name="day" value={gameData.day} onChange={handleDateChange} placeholder="Day"></input>
-                <input className="rounded-lg h-[40px] w-[200px] px-4 bg-accent placeholder-silver m-1" name="year" value={gameData.year} onChange={handleDateChange} placeholder="Year"></input>
+                <input className="rounded-lg h-[40px] w-[200px] px-4 bg-accent placeholder-silver m-1 hover:bg-secondary transition duration-200 ease-in-out" name="day" value={gameData.day} onChange={handleDateChange} placeholder="Day"></input>
+                <input className="rounded-lg h-[40px] w-[200px] px-4 bg-accent placeholder-silver m-1 hover:bg-secondary transition duration-200 ease-in-out" name="year" value={gameData.year} onChange={handleDateChange} placeholder="Year"></input>
             </div>
             <div className="mb-40 font-semibold">
                 <select className="rounded-lg h-[40px] w-[300px] px-4 bg-accent m-2 hover:bg-secondary transition duration-200 ease-in-out" value={gameData.opponent} onChange={handleOpponentChange}>

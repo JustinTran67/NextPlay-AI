@@ -93,7 +93,7 @@ function PlayerCard({ name, team }) {
 
     return (
         <div className="">
-            <button className="rounded-lg p-2 w-[400px] px-4 text-left font-semibold bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out" onClick={handleClick}>
+            <button className="rounded-lg p-2 w-[400px] px-4 text-left font-semibold bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out mb-2" onClick={handleClick}>
                 {name} | {team}
             </button>
         </div>
