@@ -16,9 +16,6 @@ import io
 import requests
 from huggingface_hub import hf_hub_download
 
-# parssing for debugging 11/6/25:
-from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
-
 class PlayerViewSet(viewsets.ModelViewSet):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
@@ -50,102 +47,189 @@ class PlayerGameStatViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 class PlayerPredictionViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
-    parser_classes = [JSONParser, FormParser, MultiPartParser]
-    _model = None
+   permission_classes = [AllowAny] #TODO: switch back to IsAuthenticatedOrReadOnly later
+   _model = None
+  
+   @classmethod
+   def getModel(cls):
+       if cls._model is not None:
+           return cls._model
 
-    @classmethod
-    def getModel(cls):
-        if cls._model is not None:
-            return cls._model
 
-        local_model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'player_multioutput_projection.pkl')
-        if os.path.exists(local_model_path):
-            print(f"Loading local model from {local_model_path}")
-            cls._model = joblib.load(local_model_path)
-            return cls._model
+       # Try local model first
+       local_model_path = os.path.join(settings.BASE_DIR, 'ml_models', 'player_multioutput_projection.pkl')
+       if os.path.exists(local_model_path):
+           print(f"Loading local model from {local_model_path}")
+           cls._model = joblib.load(local_model_path)
+           return cls._model
 
-        repo_id = os.environ.get("HF_MODEL_REPO", "JustinTran67/nbamodel")
-        filename = "player_multioutput_projection.pkl"
-        try:
-            model_path = hf_hub_download(
-                repo_id=repo_id,
-                filename=filename,
-                cache_dir=os.environ.get("MODEL_DOWNLOAD_DIR", "/tmp"),
-            )
-            cls._model = joblib.load(model_path)
-            print(f"Model loaded successfully from Hugging Face: {model_path}")
-        except Exception as e:
-            print(f"Failed to load model: {e}")
-            cls._model = None
-        return cls._model
 
-    @action(detail=False, methods=['post'])
-    def predict(self, request):
-        try:
-            print("Incoming prediction request:", request.data)  # debug line
-            model = self.getModel()
-            if model is None:
-                return Response({'error': 'Model not loaded.'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+       # Try model path from environment variable
+       env_model_path = os.environ.get("MODEL_PATH")
+       if env_model_path and os.path.exists(env_model_path):
+           print(f"Loading model from MODEL_PATH: {env_model_path}")
+           cls._model = joblib.load(env_model_path)
+           return cls._model
 
-            player_name = request.data.get('player')
-            opponent = request.data.get('opponent')
-            home = request.data.get('home', 1)
-            game_date_str = request.data.get('game_date', None)
 
-            if not player_name or not opponent:
-                return Response({'error': 'Missing player or opponent field'}, status=status.HTTP_400_BAD_REQUEST)
+       # Download from Hugging Face
+       repo_id = os.environ.get("HF_MODEL_REPO", "JustinTran67/nbamodel")
+       filename = "player_multioutput_projection.pkl"
+       print(f"Downloading model {filename} from Hugging Face repo {repo_id}...")
+       try:
+           model_path = hf_hub_download(
+               repo_id=repo_id,
+               filename=filename,
+               cache_dir=os.environ.get("MODEL_DOWNLOAD_DIR", "/tmp"),  # /tmp for Railway
+           )
+           cls._model = joblib.load(model_path)
+           print(f"Model loaded successfully from Hugging Face: {model_path}")
+       except Exception as e:
+           print(f"Failed to load model from Hugging Face: {e}")
+           cls._model = None
+       return cls._model
 
-            player = Player.objects.filter(name__iexact=player_name).first()
-            if not player:
-                return Response({'error': f'Player "{player_name}" not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-            qs = PlayerGameStat.objects.filter(player=player).order_by('-game_date')[:50].values()
-            df = pd.DataFrame(list(qs))
-            if df.empty:
-                return Response({'error': f'No game stats found for player "{player_name}".'}, status=status.HTTP_400_BAD_REQUEST)
+   @action(detail=False, methods=['post'])
+   def predict(self, request):
+       try:
+           model = self.getModel()
+           if model is None:
+               return Response({'error': 'Model not loaded.'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
-            df['game_date'] = pd.to_datetime(df['game_date'])
-            last_game_date = df['game_date'].max()
-            game_date = pd.to_datetime(game_date_str) if game_date_str else last_game_date + pd.Timedelta(days=1)
 
-            df = pd.concat([df, pd.DataFrame([{
-                'player_id': player.pk,
-                'game_date': game_date,
-                'opponent': opponent,
-                'home': home,
-                **{col: None for col in [
-                    'minutes', 'points', 'assists', 'blocks', 'steals', 'fg_percent',
-                    'threepa', 'threep', 'threep_percent', 'fta', 'ft', 'ft_percent',
-                    'total_rebounds', 'personal_fouls', 'turnovers'
-                ]}
-            }])])
+           player_name = request.data.get('player')
+           opponent = request.data.get('opponent')
+           home = request.data.get('home', 1)
+           game_date_str = request.data.get('game_date', None)
 
-            df = add_recent_average_features(df)
-            df['opponent'] = df['opponent'].astype('category').cat.codes
 
-            feature_cols = [
-                'player_id', 'rest_days', 'opponent', 'home',
-                'avg_minutes_last5', 'avg_points_last5', 'avg_assists_last5',
-                'avg_blocks_last5', 'avg_steals_last5', 'avg_fg_percent_last5',
-                'avg_threepa_last5', 'avg_threep_last5', 'avg_threep_percent_last5',
-                'avg_fta_last5', 'avg_ft_last5', 'avg_ft_percent_last5',
-                'avg_total_rebounds_last5', 'avg_personal_fouls_last5',
-                'avg_turnovers_last5', 'avg_did_play_last10'
-            ]
-            latest = df.sort_values('game_date').iloc[-1]
-            features = latest[feature_cols].values.reshape(1, -1)
-            prediction = model.predict(features)[0]
+           if not player_name or not opponent:
+               return Response(
+                   {'error' : 'Missing player or opponent field'},
+                   status=status.HTTP_400_BAD_REQUEST
+               )
+          
+           player = Player.objects.filter(name__iexact=player_name).first()
+           if not player:
+               return Response(
+                   {'error' : f'Player "{player_name}" not found.'},
+                   status = status.HTTP_404_NOT_FOUND
+               )
+          
+           qs = PlayerGameStat.objects.filter(player=player).order_by('-game_date')[:50].values( #filter in reverse game_date so you get newest games!
+               'player_id',
+               'game_date',
+               'opponent',
+               'home',
+               'minutes',
+               'points',
+               'assists',
+               'blocks',
+               'steals',
+               'fg_percent',
+               'threepa',
+               'threep',
+               'threep_percent',
+               'fta',
+               'ft',
+               'ft_percent',
+               'total_rebounds',
+               'personal_fouls',
+               'turnovers'
+           )
 
-            stat_names = [
-                'minutes', 'points', 'assists', 'blocks', 'steals', 'fg_percent',
-                'threepa', 'threep', 'threep_percent', 'fta', 'ft', 'ft_percent',
-                'total_rebounds', 'personal_fouls', 'turnovers'
-            ]
-            result = dict(zip(stat_names, prediction))
-            return Response({'player': player_name, 'opponent': opponent, 'predictions': result})
 
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+           df = pd.DataFrame(list(qs))
+           if df.empty:
+               return Response(
+                   {'error' : f'No game stats found for player "{player_name}".'},
+                   status = status.HTTP_400_BAD_REQUEST
+               )
+          
+           df['game_date'] = pd.to_datetime(df['game_date'])
+           last_game_date = df['game_date'].max()
+
+
+           if game_date_str:
+               game_date = pd.to_datetime(game_date_str)
+           else:
+               game_date = last_game_date + pd.Timedelta(days=1)
+
+
+           # append future game row for rest days calculation.
+           df = pd.concat([df, pd.DataFrame([{
+               'player_id': player.pk,
+               'game_date': game_date,
+               'opponent': opponent,
+               'home': home,
+               'minutes': None,
+               'points': None,
+               'assists': None,
+               'blocks': None,
+               'steals': None,
+               'fg_percent': None,
+               'threepa': None,
+               'threep': None,
+               'threep_percent': None,
+               'fta': None,
+               'ft': None,
+               'ft_percent': None,
+               'total_rebounds': None,
+               'personal_fouls': None,
+               'turnovers': None,
+           }])])
+          
+           df = add_recent_average_features(df)
+
+
+           df['opponent'] = df['opponent'].astype('category').cat.codes
+
+
+           #get latest stats
+           latest = df.sort_values('game_date').iloc[-1]
+
+
+           feature_cols = [
+               'player_id',
+               'rest_days',
+               'opponent',
+               'home',
+               'avg_minutes_last5',
+               'avg_points_last5',
+               'avg_assists_last5',
+               'avg_blocks_last5',
+               'avg_steals_last5',
+               'avg_fg_percent_last5',
+               'avg_threepa_last5',
+               'avg_threep_last5',
+               'avg_threep_percent_last5',
+               'avg_fta_last5',
+               'avg_ft_last5',
+               'avg_ft_percent_last5',
+               'avg_total_rebounds_last5',
+               'avg_personal_fouls_last5',
+               'avg_turnovers_last5',
+               'avg_did_play_last10'
+           ]
+           features = latest[feature_cols].values.reshape(1, -1)
+           prediction = model.predict(features)[0] #I do this because the model is multi-output
+
+
+           stat_names = [
+               'minutes', 'points', 'assists', 'blocks', 'steals', 'fg_percent',
+               'threepa', 'threep', 'threep_percent', 'fta', 'ft', 'ft_percent',
+               'total_rebounds', 'personal_fouls', 'turnovers'
+           ]
+           result = dict(zip(stat_names, prediction))
+           return Response({
+               'player': player_name,
+               'opponent': opponent,
+               'predictions': result,
+           })
+      
+       except Exception as e:
+           return Response(
+               {'error' : str(e)},
+               status=status.HTTP_500_INTERNAL_SERVER_ERROR
+           )
