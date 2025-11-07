@@ -11,7 +11,7 @@ import os
 from django.conf import settings
 from ml_models.data_preperation import add_recent_average_features
 
-# extras for deployment
+# extras for deployment (Downloading model from HF because too big to push to github)
 import io
 import requests
 from huggingface_hub import hf_hub_download
@@ -70,7 +70,7 @@ class PlayerPredictionViewSet(viewsets.ModelViewSet):
             return cls._model
 
         # Download from Hugging Face
-        repo_id = os.environ.get("HF_MODEL_REPO", "your-username/nbamodel")
+        repo_id = os.environ.get("HF_MODEL_REPO", "JustinTran67/nbamodel")
         filename = "player_multioutput_projection.pkl"
         print(f"Downloading model {filename} from Hugging Face repo {repo_id}...")
         try:

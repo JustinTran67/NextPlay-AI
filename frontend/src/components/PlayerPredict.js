@@ -7,7 +7,8 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
     
     useEffect (() => {
         const fetchPrediction = async () => {
-            fetch('http://localhost:8000/api/player-predictions/predict/', {
+            const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+            fetch(`${API_BASE}/api/player-predictions/predict/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,7 +78,8 @@ function RecommendedPlayers({ name, team, opponent }) {
     const [recommendedPlayers, setRecommendedPlayers] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/players/')
+        const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+        fetch(`${API_BASE}/api/players/`)
             .then(response => response.json())
             .then(data => {
                 const filteredPlayers = data.filter(player => (player.team === team || player.team === opponent) && player.name !== name);

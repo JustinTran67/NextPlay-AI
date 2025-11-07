@@ -39,7 +39,8 @@ export default function Home() {
     ]
 
     useEffect(() => {
-        fetch('http://localhost:8000/api/players/')
+        const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
+        fetch(`${API_BASE}/api/players/`)
             .then(response => response.json())
             .then(data => {
                 const filteredData = data.filter(player => teams.includes(player.team));
