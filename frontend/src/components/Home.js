@@ -47,7 +47,7 @@ export default function Home() {
                 const filteredData = data.filter(player => teams.includes(player.team));
                 setPlayers(filteredData);
             })
-    }, []);
+    });
 
     return (
         <div className="flex flex-col items-center">
