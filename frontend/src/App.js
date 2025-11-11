@@ -19,7 +19,7 @@ function App() {
   return (
     <div className="bg-primary min-h-screen text-light">
       <header className="">
-        <button className="justify-left h-12 w-12 rounded-xl m-4 p-1 bg-secondary hover:bg-accent transition duration-200 ease-in-out" onClick={handleClick}><img src={logo}></img></button>
+        <button className="justify-left h-12 w-12 rounded-xl m-4 p-1 bg-secondary hover:bg-accent transition duration-200 ease-in-out" onClick={handleClick}><img src={logo} alt="NextPlay AI logo"></img></button>
       </header>
       <div className="flex items-center justify-center text-center">
         <Routes>
