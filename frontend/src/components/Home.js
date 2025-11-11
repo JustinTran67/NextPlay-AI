@@ -40,7 +40,7 @@ export default function Home() {
 
     useEffect(() => {
         const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000';
-        console.log("API base URL:", process.env.REACT_APP_API_BASE_URL);
+        console.log("API base URL:", process.env.REACT_APP_API_BASE_URL); // debug line
         fetch(`${API_BASE}/api/players/`)
             .then(response => response.json())
             .then(data => {
@@ -64,7 +64,7 @@ function SearchBar({filterPlayers, setFilterPlayers}) {
     return (
         <div className="">
             <input className="rounded-3xl mb-10 p-2 h-[50px] w-[600px] px-8 bg-accent placeholder-silver"
-q               type="text" value={filterPlayers} onChange={(e) => setFilterPlayers(e.target.value)} placeholder="Search players to get projections..."
+               type="text" value={filterPlayers} onChange={(e) => setFilterPlayers(e.target.value)} placeholder="Search players to get projections..."
             />
         </div>
     )
@@ -72,8 +72,8 @@ q               type="text" value={filterPlayers} onChange={(e) => setFilterPlay
 
 function PlayerList({playerData, filterPlayers}) {
     return (
-        <div className="items-center justify-center w-[450px] py-4 rounded-lg bg-secondary">
-            <ul>
+        <div className="w-[450px] max-h-[400px] overflow-y-auto bg-secondary rounded-lg shadow-lg scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+            <ul className="p-6">
                 {playerData.map((player) => 
                     {return (player.name.toLowerCase().includes(filterPlayers.toLowerCase()) || player.team.toLowerCase().includes(filterPlayers.toLowerCase())) ?
                         <li key={player.id}>
@@ -83,6 +83,7 @@ function PlayerList({playerData, filterPlayers}) {
                 )}
             </ul>
         </div>
+        
     )
 }
 
