@@ -10,7 +10,7 @@ import math
 # Add project directory to sys.path and set Django settings
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')  # adjust project name
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 django.setup()
 
 from backendApp.models import PlayerGameStat, Player
