@@ -4,7 +4,7 @@ import django
 import pandas as pd
 from datetime import datetime
 from kaggle.api.kaggle_api_extended import KaggleApi
-from huggingface_hub import upload_file
+from huggingface_hub import upload_file, HfApi, login
 import math
 
 # Add project directory to sys.path and set Django settings
@@ -19,10 +19,16 @@ from ml_models.train_model2 import train_and_save_model
 HF_REPO = os.getenv("HF_MODEL_REPO")
 MAX_ROWS = int(os.getenv("MAX_ROWS", 15000))
 
-
+# Kaggle credentials
 os.environ['KAGGLE_CONFIG_DIR'] = os.path.expanduser("~/.kaggle")
 if not os.getenv("KAGGLE_USERNAME") or not os.getenv("KAGGLE_KEY"):
     raise EnvironmentError("KAGGLE_USERNAME or KAGGLE_KEY environment variable not set.")
+
+# Hugging Face credentials
+hf_token = os.getenv("HUGGINGFACE_TOKEN")
+if not hf_token:
+    raise EnvironmentError("HUGGINGFACE_TOKEN not set in environment.")
+login(token=hf_token)
 
 def download_latest_dataset():
     api = KaggleApi()
