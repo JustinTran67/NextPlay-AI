@@ -1,5 +1,6 @@
 import PlayerPredict from '../components/PlayerPredict';
 import { useNavigate, useLocation } from 'react-router-dom';
+import useInView from '../hooks/useInView';
 
 export default function PredictionPage() {
     const location = useLocation();
@@ -19,9 +20,25 @@ export default function PredictionPage() {
     return (
         <div className="mt-20 mb-40">
             <PlayerPredict name={name} team={team} opponent={opponent} date={date} home={home} />
-            <div>
-                <button className="rounded-lg h-[40px] w-[300px] px-4 font-bold bg-nbared hover:bg-nbared2 transition duration-200 ease-in-out opacity-0 animate-fadeUp [animation-delay:3s]" onClick={handleClickToHomePage}>Get more predictions!</button>
-            </div>
+            <FadeSection delay="0.2s">
+                <button className="rounded-lg h-[40px] w-[300px] px-4 font-bold bg-nbared hover:bg-nbared2 transition duration-200 ease-in-out" onClick={handleClickToHomePage}>Get more predictions!</button>
+            </FadeSection>
         </div>
     )
+}
+
+function FadeSection({ children, delay = "0s" }) {
+    const [ref, inView] = useInView();
+  
+    return (
+      <div
+        ref={ref}
+        style={{ animationDelay: delay }}
+        className={`opacity-0 ${
+          inView ? "animate-fadeUp" : ""
+        }`}
+      >
+        {children}
+      </div>
+    );
 }

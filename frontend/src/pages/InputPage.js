@@ -1,5 +1,7 @@
 import InputGameData from '../components/InputGameData';
+import RecentGames from '../components/RecentGames';
 import { useLocation } from 'react-router-dom';
+import useInView from '../hooks/useInView';
 
 export default function InputPage() {
     const location = useLocation();
@@ -9,10 +11,29 @@ export default function InputPage() {
     return (
         <div className="flex flex-col items-center mt-20 mb-40">
             <InputGameData playerName={playerName} teamName={teamName}/>
-            <div className="w-[500px] p-4 rounded-lg opacity-0 animate-fadeUp [animation-delay:1s]">
-                <p className="text-[32px] font-bold mb-4">Pro Tip</p>
-                <p className="text-xl">Input the <span className="text-nbared font-bold">nearest upcoming game</span> for the most accurate prediction!</p>
-            </div>
+            <RecentGames playerName={playerName} />
+            <FadeSection delay="0.2s">
+                <div className="w-[500px] p-4 rounded-lg">
+                    <p className="text-[32px] font-bold mb-4">Pro Tip</p>
+                    <p className="text-xl">Input the <span className="text-nbared font-bold">nearest upcoming game</span> for the most accurate prediction!</p>
+                </div>
+            </FadeSection>
         </div>
     )
+}
+
+function FadeSection({ children, delay = "0s" }) {
+    const [ref, inView] = useInView();
+  
+    return (
+      <div
+        ref={ref}
+        style={{ animationDelay: delay }}
+        className={`opacity-0 ${
+          inView ? "animate-fadeUp" : ""
+        }`}
+      >
+        {children}
+      </div>
+    );
 }

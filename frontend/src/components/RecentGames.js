@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useInView from '../hooks/useInView';
 
 export default function RecentGames({ playerName }) {
     const [recentGames, setRecentGames] = useState([]);
@@ -13,9 +14,9 @@ export default function RecentGames({ playerName }) {
             })
     }, [playerName]);
     
-    return (    
-        <div className="flex flex-col items-center mb-20 opacity-0 animate-fadeUp [animation-delay:1s]">
-            <h3 className="text-[24px] mb-4 font-bold">Last 10 Games</h3>
+    return (
+        <div className="flex flex-col items-center mb-40">
+            <h3 className="text-[32px] mb-4 font-bold">Last 10 Games</h3>
             <div className="w-[1000px] rounded-xl p-8 bg-secondary font-semibold">
                 <div className="grid grid-cols-[1fr,repeat(6,80px)] items-center mb-4 font-bold text-right">
                     <h2 className="text-left ml-10">date</h2>
@@ -26,25 +27,26 @@ export default function RecentGames({ playerName }) {
                     <h2 className="mr-2">stl</h2>
                     <h2 className="mr-2">blk</h2>
                 </div>
-
-                <ul>
-                    {recentGames.map((game, index) => (
-                        <li className="opacity-0 animate-fadeUp [animation-delay:1.5s]" key={index}>
-                            <GameCard
-                                team={game.team}
-                                opponent={game.opponent}
-                                date={game.game_date}
-                                home={game.home}
-                                minutes={game.minutes}
-                                points={game.points}
-                                rebounds={game.total_rebounds}
-                                assists={game.assists}
-                                steals={game.steals}
-                                blocks={game.blocks}
-                            />
-                        </li>
-                    ))}
-                </ul>
+                <FadeSection delay="0.2s">
+                    <ul>
+                        {recentGames.map((game, index) => (
+                            <li className="" key={index}>
+                                <GameCard
+                                    team={game.team}
+                                    opponent={game.opponent}
+                                    date={game.game_date}
+                                    home={game.home}
+                                    minutes={game.minutes}
+                                    points={game.points}
+                                    rebounds={game.total_rebounds}
+                                    assists={game.assists}
+                                    steals={game.steals}
+                                    blocks={game.blocks}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </FadeSection>
             </div>
         </div>
     )
@@ -64,4 +66,20 @@ function GameCard({ team, opponent, date, home, minutes, points, rebounds, assis
             <span>{blocks}</span>
         </div>
     )
+}
+
+function FadeSection({ children, delay = "0s" }) {
+    const [ref, inView] = useInView();
+  
+    return (
+      <div
+        ref={ref}
+        style={{ animationDelay: delay }}
+        className={`opacity-0 ${
+          inView ? "animate-fadeUp" : ""
+        }`}
+      >
+        {children}
+      </div>
+    );
 }

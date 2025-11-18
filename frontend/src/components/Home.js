@@ -1,5 +1,9 @@
+// react
 import React, { useState, useEffect } from 'react';
+// router
 import { useNavigate } from 'react-router-dom';
+// hooks
+import useInView from '../hooks/useInView';
 
 const teams = [
     "Atlanta Hawks",
@@ -56,12 +60,30 @@ export default function Home() {
             </h1>
             <SearchBar filterPlayers={filterPlayers} setFilterPlayers={setFilterPlayers} />
             <PlayerList playerData={players} filterPlayers={filterPlayers} />
-            <div className="w-[600px] opacity-0 animate-fadeUp [animation-delay:1.5s]">
-                <p className="text-[32px] mb-8 font-bold">On demand <span className="text-nbared">basketball projections</span>, looking into the future of the NBA</p>
-                <p className="text-xl">Search for players, enter their next game, let us predict. <span className="font-bold">Easy!</span></p>
-            </div>
+            <FadeSection delay="0.2s">
+                <div className="w-[600px]">
+                    <p className="text-[32px] mb-8 font-bold">On demand <span className="text-nbared">basketball projections</span>, looking into the future of the NBA</p>
+                    <p className="text-xl">Search for players, enter their next game, let us predict. <span className="font-bold">Easy!</span></p>
+                </div>
+            </FadeSection>
         </div>
     )
+}
+
+function FadeSection({ children, delay = "0s" }) {
+    const [ref, inView] = useInView();
+  
+    return (
+      <div
+        ref={ref}
+        style={{ animationDelay: delay }}
+        className={`opacity-0 ${
+          inView ? "animate-fadeUp" : ""
+        }`}
+      >
+        {children}
+      </div>
+    );
 }
 
 function SearchBar({filterPlayers, setFilterPlayers}) {

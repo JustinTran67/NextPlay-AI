@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useInView from '../hooks/useInView';
 
 export default function RecommendedPlayers({ name, team, opponent }) {
     const [recommendedPlayers, setRecommendedPlayers] = useState([]);
@@ -15,20 +16,22 @@ export default function RecommendedPlayers({ name, team, opponent }) {
     }, [name, team, opponent]);
 
     return (
-        <div className="flex flex-col items-center opacity-0 animate-fadeUp [animation-delay:2s]">
-            <div>
-                <h3 className="font-bold text-[24px] mb-4">Recommended predictions</h3>
+        <FadeSection delay="0.2s">
+            <div className="flex flex-col items-center mt-40">
+                <div>
+                    <h3 className="font-bold text-[32px] mb-4">Recommended predictions</h3>
+                </div>
+                <div className="w-[500px] max-h-[400px] overflow-y-auto bg-secondary rounded-lg shadow-lg scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 mb-10">
+                    <ul className="p-6">
+                        {recommendedPlayers.map((player) => 
+                            <li className="opacity-0 animate-fadeUp [animation-delay:2.5s]" key={player.id}>
+                                <PlayerCard name={player.name} team={player.team} />
+                            </li>
+                        )}
+                    </ul>
+                </div>
             </div>
-            <div className="w-[500px] max-h-[400px] overflow-y-auto bg-secondary rounded-lg shadow-lg scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 mb-10">
-                <ul className="p-6">
-                    {recommendedPlayers.map((player) => 
-                        <li className="opacity-0 animate-fadeUp [animation-delay:2.5s]" key={player.id}>
-                            <PlayerCard name={player.name} team={player.team} />
-                        </li>
-                    )}
-                </ul>
-            </div>
-        </div>
+        </FadeSection>
     )
 }
 
@@ -44,4 +47,20 @@ function PlayerCard({ name, team }) {
             <button className="rounded-lg p-2 w-[450px] px-4 text-left font-semibold bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out mb-2" onClick={handleClick}>{name} | {team}</button>
         </div>
     )
+}
+
+function FadeSection({ children, delay = "0s" }) {
+    const [ref, inView] = useInView();
+  
+    return (
+      <div
+        ref={ref}
+        style={{ animationDelay: delay }}
+        className={`opacity-0 ${
+          inView ? "animate-fadeUp" : ""
+        }`}
+      >
+        {children}
+      </div>
+    );
 }

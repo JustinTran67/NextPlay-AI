@@ -42,17 +42,17 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
     }, [name, opponent, date, home]);
     
     // manually calculate three point and free throw percentages based on predicted made and attempted.
-    const threep_percent = predictionData? ((Math.round(predictionData.predictions.threepa) != 0)? Math.round(predictionData.predictions.threep) / Math.round(predictionData.predictions.threepa) * 100 : 0) : 0
-    const ft_percent = predictionData? ((Math.round(predictionData.predictions.fta) != 0)? Math.round(predictionData.predictions.ft) / Math.round(predictionData.predictions.fta) * 100 : 0) : 0
+    const threep_percent = predictionData? ((Math.round(predictionData.predictions.threepa) !== 0)? Math.round(predictionData.predictions.threep) / Math.round(predictionData.predictions.threepa) * 100 : 0) : 0
+    const ft_percent = predictionData? ((Math.round(predictionData.predictions.fta) !== 0)? Math.round(predictionData.predictions.ft) / Math.round(predictionData.predictions.fta) * 100 : 0) : 0
 
     return (
         <div className="flex flex-col items-center mb-10">
             {predictionData ? (
                  <div className="flex flex-col items-center">
-                    <div>
-                        <h2 className="font-bold text-[32px] mb-4 opacity-0 animate-fadeUp">{predictionData.player} vs {predictionData.opponent}</h2>
+                    <div className="mt-12 mb-8">
+                        <h2 className="font-bold text-[48px] mb-4 opacity-0 animate-fadeUp"><span className="text-nbared">{predictionData.player}</span> vs {predictionData.opponent}</h2>
                     </div>
-                    <div className="w-[700px] rounded-xl p-8 bg-secondary mb-20 font-semibold text-left text-[20px] opacity-0 animate-fadeUp [animation-delay:0.5s]">
+                    <div className="w-[700px] rounded-xl p-8 bg-secondary mb-80 font-semibold text-left text-[20px] opacity-0 animate-fadeUp [animation-delay:0.5s]">
                         <p>Minutes: {predictionData.predictions.minutes.toFixed(2)}</p>
                         <p>Points: {Math.round(predictionData.predictions.points)}</p>
                         <p>Rebounds: {Math.round(predictionData.predictions.total_rebounds)}</p>
