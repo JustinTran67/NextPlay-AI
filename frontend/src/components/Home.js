@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // hooks
 import useInView from '../hooks/useInView';
+// assets
+import logo from '../assets/Logo.png';
 
 const teams = [
     "Atlanta Hawks",
@@ -55,8 +57,8 @@ export default function Home() {
 
     return (
         <div className="flex flex-col items-center">
-            <h1 className="mb-20 justify-center text-center tracking-wide text-[64px] font-bold opacity-0 animate-fadeUp">
-                NextPlay 🏀
+            <h1 className="mb-20 flex justify-center text-center tracking-wide text-[64px] font-bold opacity-0 animate-fadeUp">
+                NextPlay <img className="w-[100px] opacity-0 animate-growIn [animation-delay:0.2s]" src={logo} alt="NextPlay logo"></img>
             </h1>
             <SearchBar filterPlayers={filterPlayers} setFilterPlayers={setFilterPlayers} />
             <PlayerList playerData={players} filterPlayers={filterPlayers} />
@@ -68,22 +70,6 @@ export default function Home() {
             </FadeSection>
         </div>
     )
-}
-
-function FadeSection({ children, delay = "0s" }) {
-    const [ref, inView] = useInView();
-  
-    return (
-      <div
-        ref={ref}
-        style={{ animationDelay: delay }}
-        className={`opacity-0 ${
-          inView ? "animate-fadeUp" : ""
-        }`}
-      >
-        {children}
-      </div>
-    );
 }
 
 function SearchBar({filterPlayers, setFilterPlayers}) {
@@ -127,4 +113,21 @@ function PlayerCard({ name, team }) {
             </button>
         </div>
     )
+}
+
+// On scroll fade in component animation
+function FadeSection({ children, delay = "0s" }) {
+    const [ref, inView] = useInView();
+  
+    return (
+      <div
+        ref={ref}
+        style={{ animationDelay: delay }}
+        className={`opacity-0 ${
+          inView ? "animate-fadeUp" : ""
+        }`}
+      >
+        {children}
+      </div>
+    );
 }

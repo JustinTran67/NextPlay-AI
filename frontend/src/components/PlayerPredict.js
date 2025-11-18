@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import RecentGames from './RecentGames';
 import RecommendedPlayers from './RecommendedPlayers';
 import logo from '../assets/Logo.png';
+import useInView from '../hooks/useInView';
 
 export default function PlayerPredict({ name, team, opponent, date, home }) {
 
@@ -52,23 +53,25 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
                     <div className="mt-12 mb-8">
                         <h2 className="font-bold text-[48px] mb-4 opacity-0 animate-fadeUp"><span className="text-nbared">{predictionData.player}</span> vs {predictionData.opponent}</h2>
                     </div>
-                    <div className="w-[700px] rounded-xl p-8 bg-secondary mb-80 font-semibold text-left text-[20px] opacity-0 animate-fadeUp [animation-delay:0.5s]">
-                        <p>Minutes: {predictionData.predictions.minutes.toFixed(2)}</p>
-                        <p>Points: {Math.round(predictionData.predictions.points)}</p>
-                        <p>Rebounds: {Math.round(predictionData.predictions.total_rebounds)}</p>
-                        <p>Assists: {Math.round(predictionData.predictions.assists)}</p>
-                        <p>Blocks: {Math.round(predictionData.predictions.blocks)}</p>
-                        <p>Steals: {Math.round(predictionData.predictions.steals)}</p>
-                        <p>Field Goal Percent: {Math.round(predictionData.predictions.fg_percent * 100)}%</p>  
-                        <p>Three Pointers Attempted: {Math.round(predictionData.predictions.threepa)}</p>
-                        <p>Three Pointers: {Math.round(predictionData.predictions.threep)}</p>
-                        <p>Three Point Percent: {Math.round(threep_percent)}%</p>
-                        <p>Free Throws Attempted: {Math.round(predictionData.predictions.fta)}</p>
-                        <p>Free Throws: {Math.round(predictionData.predictions.ft)}</p>
-                        <p>Free Throw Percent: {Math.round(ft_percent)}%</p>
-                        <p>Personal Fouls: {Math.round(predictionData.predictions.personal_fouls)}</p>
-                        <p>Turnovers: {Math.round(predictionData.predictions.turnovers)}</p>
-                    </div>
+                    <FadeSection delay="0.5s">
+                        <div className="w-[700px] rounded-xl p-8 bg-secondary mb-80 font-semibold text-left text-[20px]">
+                            <p>Minutes: {predictionData.predictions.minutes.toFixed(2)}</p>
+                            <p>Points: {Math.round(predictionData.predictions.points)}</p>
+                            <p>Rebounds: {Math.round(predictionData.predictions.total_rebounds)}</p>
+                            <p>Assists: {Math.round(predictionData.predictions.assists)}</p>
+                            <p>Blocks: {Math.round(predictionData.predictions.blocks)}</p>
+                            <p>Steals: {Math.round(predictionData.predictions.steals)}</p>
+                            <p>Field Goal Percent: {Math.round(predictionData.predictions.fg_percent * 100)}%</p>  
+                            <p>Three Pointers Attempted: {Math.round(predictionData.predictions.threepa)}</p>
+                            <p>Three Pointers: {Math.round(predictionData.predictions.threep)}</p>
+                            <p>Three Point Percent: {Math.round(threep_percent)}%</p>
+                            <p>Free Throws Attempted: {Math.round(predictionData.predictions.fta)}</p>
+                            <p>Free Throws: {Math.round(predictionData.predictions.ft)}</p>
+                            <p>Free Throw Percent: {Math.round(ft_percent)}%</p>
+                            <p>Personal Fouls: {Math.round(predictionData.predictions.personal_fouls)}</p>
+                            <p>Turnovers: {Math.round(predictionData.predictions.turnovers)}</p>
+                        </div>
+                    </FadeSection>
                     <RecentGames playerName={name} />
                     <RecommendedPlayers name={name} team={team} opponent={opponent} />
                 </div>
@@ -80,4 +83,20 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
                 )}
         </div>
     )
+}
+
+function FadeSection({ children, delay = "0s" }) {
+    const [ref, inView] = useInView();
+  
+    return (
+      <div
+        ref={ref}
+        style={{ animationDelay: delay }}
+        className={`opacity-0 ${
+          inView ? "animate-fadeUp" : ""
+        }`}
+      >
+        {children}
+      </div>
+    );
 }
