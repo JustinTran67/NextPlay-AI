@@ -16,10 +16,22 @@ export default function RecentGames({ playerName }) {
     
     return (
         <FadeSection delay="0.2s">
-            <div className="flex flex-col items-center mb-40">
-                <h3 className="text-[32px] mb-4 font-bold">Last 10 Games</h3>
-                <div className="w-[1000px] rounded-xl p-8 bg-secondary font-semibold">
-                    <div className="grid grid-cols-[1fr,repeat(6,80px)] items-center mb-4 font-bold text-right">
+            <div className="flex flex-col items-center mb-20 md:mb-40">
+                <h3 className="text-[24px] md:text-[32px] mb-4 font-bold">Last 10 Games</h3>
+
+                <div className="
+                    w-full md:w-[1000px]
+                    p-4 md:p-8
+                    bg-secondary
+                    rounded-xl
+                    font-semibold
+                ">
+                    {/* Header row */}
+                    <div className="
+                        hidden md:grid 
+                        grid-cols-[1fr,repeat(6,80px)] 
+                        items-center mb-4 font-bold text-right
+                    ">
                         <h2 className="text-left ml-10">date</h2>
                         <h2 className="mr-4">min</h2>
                         <h2 className="mr-2">pts</h2>
@@ -28,10 +40,11 @@ export default function RecentGames({ playerName }) {
                         <h2 className="mr-2">stl</h2>
                         <h2 className="mr-2">blk</h2>
                     </div>
+
                     <FadeSection delay="0.2s">
                         <ul>
                             {recentGames.map((game, index) => (
-                                <li className="" key={index}>
+                                <li key={index}>
                                     <GameCard
                                         team={game.team}
                                         opponent={game.opponent}
@@ -56,16 +69,42 @@ export default function RecentGames({ playerName }) {
 
 function GameCard({ team, opponent, date, home, minutes, points, rebounds, assists, steals, blocks }) {
     return (
-        <div className="grid grid-cols-[1fr,repeat(6,80px)] items-center mb-3 bg-accent shadow-lg rounded-lg px-4 py-2 hover:bg-secondary transition duration-200 ease-in-out text-right font-semibold font-mono text-sm">
-            <p className="text-left truncate">
+        <div
+            className="
+                bg-accent shadow-lg rounded-lg
+                px-3 py-2 md:px-4 md:py-2
+                mb-3
+                font-semibold font-mono
+                transition duration-200 ease-in-out
+                hover:bg-secondary
+                text-sm
+                grid grid-cols-1 md:grid-cols-[1fr,repeat(6,80px)]
+                gap-2 md:gap-0
+                text-left md:text-right
+            "
+        >
+            {/* Mobile layout → stacked full width */}
+            <p className="truncate md:text-left">
                 {date} | {home === 1 ? `${opponent} at ${team}` : `${team} at ${opponent}`}
             </p>
-            <span>{minutes ? minutes.toFixed(2) : 0}</span>
-            <span>{points}</span>
-            <span>{rebounds}</span>
-            <span>{assists}</span>
-            <span>{steals}</span>
-            <span>{blocks}</span>
+
+            {/* Desktop-only stats row */}
+            <span className="hidden md:block">{minutes ? minutes.toFixed(2) : 0}</span>
+            <span className="hidden md:block">{points}</span>
+            <span className="hidden md:block">{rebounds}</span>
+            <span className="hidden md:block">{assists}</span>
+            <span className="hidden md:block">{steals}</span>
+            <span className="hidden md:block">{blocks}</span>
+
+            {/* Mobile condensed stats */}
+            <div className="flex md:hidden justify-between text-xs">
+                <span>Min: {minutes ? minutes.toFixed(2) : 0}</span>
+                <span>Pts: {points}</span>
+                <span>Reb: {rebounds}</span>
+                <span>Ast: {assists}</span>
+                <span>Stl: {steals}</span>
+                <span>Blk: {blocks}</span>
+            </div>
         </div>
     )
 }
@@ -77,9 +116,7 @@ function FadeSection({ children, delay = "0s" }) {
       <div
         ref={ref}
         style={{ animationDelay: delay }}
-        className={`opacity-0 ${
-          inView ? "animate-fadeUp" : ""
-        }`}
+        className={`opacity-0 ${inView ? "animate-fadeUp" : ""}`}
       >
         {children}
       </div>

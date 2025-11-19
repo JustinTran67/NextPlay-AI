@@ -21,7 +21,7 @@ function App() {
 
   return (
     <div className="bg-primary min-h-screen text-light font-inter">
-      <header className="fixed top-0, left-0">
+      <header className="fixed top-0, left-0 z-[9999]">
         <button className="justify-left h-12 w-12 rounded-xl m-4 p-1 bg-secondary hover:bg-accent transition duration-200 ease-in-out" onClick={handleClick}>
           <img className="hover:animate-oneSpin" src={logo} alt="NextPlay logo"></img>
         </button>

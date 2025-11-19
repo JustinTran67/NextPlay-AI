@@ -49,19 +49,30 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
     return (
         <div className="flex flex-col items-center mb-10">
             {predictionData ? (
-                 <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center">
                     <div className="mt-12 mb-8">
-                        <h2 className="font-bold text-[48px] mb-4 opacity-0 animate-fadeUp"><span className="text-nbared">{predictionData.player}</span> vs {predictionData.opponent}</h2>
+                        <h2 className="font-bold w-[350px] md:w-full text-[24px] md:text-[48px] mb-4 opacity-0 animate-fadeUp">
+                            <span className="text-nbared">{predictionData.player}</span> vs {predictionData.opponent}
+                        </h2>
                     </div>
+
                     <FadeSection delay="0.5s">
-                        <div className="w-[700px] rounded-xl p-8 bg-secondary mb-80 font-semibold text-left text-[20px]">
+                        <div className="
+                            w-[350px] md:w-[700px] 
+                            rounded-xl p-4 md:p-8 
+                            bg-secondary 
+                            mb-40 md:mb-80 
+                            font-semibold 
+                            text-left 
+                            text-[16px] md:text-[20px]
+                        ">
                             <p>Minutes: {predictionData.predictions.minutes.toFixed(2)}</p>
                             <p>Points: {Math.round(predictionData.predictions.points)}</p>
                             <p>Rebounds: {Math.round(predictionData.predictions.total_rebounds)}</p>
                             <p>Assists: {Math.round(predictionData.predictions.assists)}</p>
                             <p>Blocks: {Math.round(predictionData.predictions.blocks)}</p>
                             <p>Steals: {Math.round(predictionData.predictions.steals)}</p>
-                            <p>Field Goal Percent: {Math.round(predictionData.predictions.fg_percent * 100)}%</p>  
+                            <p>Field Goal Percent: {Math.round(predictionData.predictions.fg_percent * 100)}%</p>
                             <p>Three Pointers Attempted: {Math.round(predictionData.predictions.threepa)}</p>
                             <p>Three Pointers: {Math.round(predictionData.predictions.threep)}</p>
                             <p>Three Point Percent: {Math.round(threep_percent)}%</p>
@@ -75,12 +86,16 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
                     <RecentGames playerName={name} />
                     <RecommendedPlayers name={name} team={team} opponent={opponent} />
                 </div>
-                ) : (
-                    <div className="mt-40">
-                        <img className="w-[300px] h-[300px] animate-slowSpin mb-10" src={logo} alt="NextPlay logo"></img>
-                        <p className="text-[32px] font-bold">Loading prediction...</p>
-                    </div>
-                )}
+            ) : (
+                <div className="mt-40 flex flex-col items-center">
+                    <img 
+                        className="w-[200px] h-[200px] md:w-[300px] md:h-[300px] animate-slowSpin mb-10" 
+                        src={logo} 
+                        alt="NextPlay logo"
+                    />
+                    <p className="text-[24px] md:text-[32px] font-bold">Loading prediction...</p>
+                </div>
+            )}
         </div>
     )
 }
