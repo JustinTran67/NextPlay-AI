@@ -51,12 +51,12 @@ def parse_float(value):
 def update_database():
     new_data = pd.read_csv("data/PlayerStatistics.csv")
 
-    new_data['gameDate'] = pd.to_datetime(new_data['gameDate'].astype(str).str[:10], errors='coerce').dt.date
+    new_data['gameDateTimeEst'] = pd.to_datetime(new_data['gameDateTimeEst'].astype(str).str[:10], errors='coerce').dt.date
 
     latest_game = PlayerGameStat.objects.order_by('-game_date').first()
     latest_game_date = latest_game.game_date if latest_game else datetime(2025,3,17).date()
 
-    new_rows = new_data[new_data['gameDate'] > latest_game_date].copy()
+    new_rows = new_data[new_data['gameDateTimeEst'] > latest_game_date].copy()
     new_rows.loc[new_rows['playerteamCity'] == 'LA', 'playerteamCity'] = 'Los Angeles'
     new_rows.loc[new_rows['opponentteamCity'] == 'LA', 'opponentteamCity'] = 'Los Angeles'    
 
@@ -78,7 +78,7 @@ def update_database():
 
         objs.append(PlayerGameStat(
             player=player,
-            game_date = row['gameDate'],
+            game_date = row['gameDateTimeEst'],
                     game_type = row['gameType'] if pd.notnull(row['gameType']) else None,
                     team = row['playerteamCity'] + ' ' + row['playerteamName'],
                     opponent = row['opponentteamCity'] + ' ' + row['opponentteamName'],
