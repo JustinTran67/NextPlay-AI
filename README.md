@@ -375,7 +375,7 @@ NextPlay-AI/
 
 ## 🤝 Contributing
 
-This is a portfolio project, but suggestions and feedback are welcome! Feel free to open an issue or reach out directly.
+Suggestions and feedback are welcome! Feel free to open an issue or reach out directly.
 
 ---
 
@@ -390,11 +390,6 @@ This project was created solely for **educational and portfolio demonstration pu
   - Freely available under open licenses (e.g., Creative Commons)
   - AI-generated avatars for illustrative purposes
   - Generic placeholders not representing real individuals
-
-### Legal Notice
-- **No commercial use** of this application is intended or permitted
-- **No redistribution or monetization** is allowed
-- This project is for **demonstration and learning purposes only**
 
 ---
 
