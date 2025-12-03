@@ -386,10 +386,6 @@ This project was created solely for **educational and portfolio demonstration pu
 ### Data Usage
 - All player data is based on **publicly available** information from Kaggle datasets
 - No proprietary or commercial NBA content is included
-- Player images (if any) are either:
-  - Freely available under open licenses (e.g., Creative Commons)
-  - AI-generated avatars for illustrative purposes
-  - Generic placeholders not representing real individuals
 
 ---
 
@@ -406,7 +402,5 @@ For questions, opportunities, or collaboration:
 <div align="center">
 
 **Built with ❤️ using Django, React, and scikit-learn**
-
-⭐ Star this repo if you find it interesting!
 
 </div>
