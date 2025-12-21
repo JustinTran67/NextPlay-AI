@@ -14,7 +14,7 @@ export default function InputPage() {
             <RecentGames playerName={playerName} />
             <FadeSection delay="0.2s">
                 <div className="w-[350px] md:w-[500px] p-4 rounded-lg">
-                    <p className="text-[24px] md:text-[32px] font-bold mb-4">Pro Tip</p>
+                    <p className="text-[24px] md:text-[32px] font-semibold mb-4">Pro Tip</p>
                     <p className="text-md md:text-xl">Input the <span className="text-nbared font-bold">nearest upcoming game</span> for the most accurate prediction!</p>
                 </div>
             </FadeSection>

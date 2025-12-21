@@ -57,30 +57,89 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
                     </div>
 
                     <FadeSection delay="0.5s">
-                        <div className="
+                        <div className="flex flex-col
                             w-[350px] md:w-[700px] 
-                            rounded-xl p-4 md:p-8 
+                            rounded-xl px-4 py-4 md:px-6 md:py-6  
                             bg-secondary 
                             mb-40 md:mb-80 
-                            font-semibold 
                             text-left 
-                            text-[16px] md:text-[20px]
+                            text-sm md:text-lg
                         ">
-                            <p>Minutes: {predictionData.predictions.minutes.toFixed(2)}</p>
-                            <p>Points: {Math.round(predictionData.predictions.points)}</p>
-                            <p>Rebounds: {Math.round(predictionData.predictions.total_rebounds)}</p>
-                            <p>Assists: {Math.round(predictionData.predictions.assists)}</p>
-                            <p>Blocks: {Math.round(predictionData.predictions.blocks)}</p>
-                            <p>Steals: {Math.round(predictionData.predictions.steals)}</p>
-                            <p>Field Goal Percent: {Math.round(predictionData.predictions.fg_percent * 100)}%</p>
-                            <p>Three Pointers Attempted: {Math.round(predictionData.predictions.threepa)}</p>
-                            <p>Three Pointers: {Math.round(predictionData.predictions.threep)}</p>
-                            <p>Three Point Percent: {Math.round(threep_percent)}%</p>
-                            <p>Free Throws Attempted: {Math.round(predictionData.predictions.fta)}</p>
-                            <p>Free Throws: {Math.round(predictionData.predictions.ft)}</p>
-                            <p>Free Throw Percent: {Math.round(ft_percent)}%</p>
-                            <p>Personal Fouls: {Math.round(predictionData.predictions.personal_fouls)}</p>
-                            <p>Turnovers: {Math.round(predictionData.predictions.turnovers)}</p>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Minutes</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{predictionData.predictions.minutes.toFixed(2)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Points</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.points)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Rebounds</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.total_rebounds)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Assists</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.assists)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Blocks</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.blocks)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Steals</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.steals)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Field Goal Percent</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.fg_percent * 100)}%</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Three Pointers Attempted</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.threepa)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Three Pointers</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.threep)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Three Point Percent</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(threep_percent)}%</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Free Throws Attempted</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.fta)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Free Throws</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.ft)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Free Throw Percent</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(ft_percent)}%</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Personal Fouls</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.personal_fouls)}</p>
+                            </div>
+                            <div className="flex flex-row gap-4 items-center hover:bg-accent transition duration-200 ease-in-out px-4 py-1 rounded-full">
+                                <p>Turnovers</p>
+                                <div className="flex-1 h-px bg-white/15" />
+                                <p>{Math.round(predictionData.predictions.turnovers)}</p>
+                            </div>
                         </div>
                     </FadeSection>
                     <RecentGames playerName={name} />
@@ -93,7 +152,7 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
                         src={logo} 
                         alt="NextPlay logo"
                     />
-                    <p className="text-[24px] md:text-[32px] font-bold">Loading prediction...</p>
+                    <p className="text-[24px] md:text-[32px]">Loading prediction...</p>
                 </div>
             )}
         </div>

@@ -19,7 +19,7 @@ export default function RecommendedPlayers({ name, team, opponent }) {
         <FadeSection delay="0.2s">
             <div className="text-[12px] md:text-[16px] flex flex-col items-center mt-40">
                 <div>
-                    <h3 className="font-bold text-[24px] md:text-[32px] mb-4">Recommended predictions</h3>
+                    <h3 className="text-[24px] font-semibold mb-4">Recommended predictions</h3>
                 </div>
                 <div className="w-[350px] md:w-[500px] max-h-[400px] overflow-y-auto bg-secondary rounded-lg shadow-lg scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 mb-10">
                     <ul className="p-6">
@@ -44,7 +44,14 @@ function PlayerCard({ name, team }) {
 
     return (
         <div>
-            <button className="rounded-lg p-2 w-[300px] md:w-[450px] px-4 text-left font-semibold bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out mb-2" onClick={handleClick}>{name} | {team}</button>
+            <button className="flex flex-row justify-between rounded-lg p-2 w-[300px] md:w-[450px] px-4 text-left bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out mb-2" onClick={handleClick}>
+                <div>
+                    {name}
+                </div>
+                <div>
+                    {team}
+                </div>
+            </button>
         </div>
     )
 }

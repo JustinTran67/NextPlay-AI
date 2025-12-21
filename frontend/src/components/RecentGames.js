@@ -17,20 +17,20 @@ export default function RecentGames({ playerName }) {
     return (
         <FadeSection delay="0.2s">
             <div className="flex flex-col items-center mb-20 md:mb-40">
-                <h3 className="text-[24px] md:text-[32px] mb-4 font-bold">Last 10 Games</h3>
+                <h3 className="text-[24px] font-semibold mb-4">Last 10 Games</h3>
 
                 <div className="
                     w-full md:w-[1000px]
                     p-4 md:p-8
                     bg-secondary
                     rounded-xl
-                    font-semibold
+                    
                 ">
                     {/* Header row */}
                     <div className="
                         hidden md:grid 
                         grid-cols-[1fr,repeat(6,80px)] 
-                        items-center mb-4 font-bold text-right
+                        items-center mb-4 text-right
                     ">
                         <h2 className="text-left ml-10">date</h2>
                         <h2 className="mr-4">min</h2>
@@ -74,7 +74,7 @@ function GameCard({ team, opponent, date, home, minutes, points, rebounds, assis
                 bg-accent shadow-lg rounded-lg
                 px-3 py-2 md:px-4 md:py-2
                 mb-3
-                font-semibold font-mono
+                font-mono
                 transition duration-200 ease-in-out
                 hover:bg-secondary
                 text-sm

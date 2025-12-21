@@ -21,7 +21,7 @@ export default function PredictionPage() {
         <div className="mt-20 mb-40">
             <PlayerPredict name={name} team={team} opponent={opponent} date={date} home={home} />
             <FadeSection delay="0.2s">
-                <button className="rounded-lg h-[40px] w-[300px] px-4 font-bold bg-nbared hover:bg-nbared2 transition duration-200 ease-in-out" onClick={handleClickToHomePage}>Get more predictions!</button>
+                <button className="rounded-full h-[40px] w-[300px] px-4 bg-nbared hover:bg-nbared2 transition duration-200 ease-in-out" onClick={handleClickToHomePage}>Get more predictions!</button>
             </FadeSection>
         </div>
     )
