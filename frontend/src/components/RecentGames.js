@@ -17,7 +17,7 @@ export default function RecentGames({ playerName }) {
     return (
         <FadeSection delay="0.2s">
             <div className="flex flex-col items-center mb-20 md:mb-40">
-                <h3 className="text-[24px] font-semibold mb-4">Last 10 Games</h3>
+                <h3 className="text-[24px] font-semibold font-momo mb-4">Last 10 Games</h3>
 
                 <div className="
                     w-full md:w-[1000px]

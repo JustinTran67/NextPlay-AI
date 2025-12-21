@@ -58,14 +58,14 @@ export default function Home() {
     return (
         <div className="flex flex-col items-center">
             <div className="flex flex-row gap-2 justify-center items-center mb-20">
-                <h1 className="text-5xl md:text-[64px] font-bold opacity-0 animate-fadeUp">NextPlay</h1>
+                <h1 className="text-5xl md:text-[64px] font-bold opacity-0 animate-fadeUp font-momo">NextPlay</h1>
                 <img className="w-[75px] md:w-[100px] opacity-0 animate-growIn [animation-delay:0.2s]" src={logo} alt="NextPlay logo"></img>
             </div>
             <SearchBar filterPlayers={filterPlayers} setFilterPlayers={setFilterPlayers} />
             <PlayerList playerData={players} filterPlayers={filterPlayers} />
             <FadeSection delay="0.2s">
                 <div className="w-[350px] md:w-[600px]">
-                    <p className="text-[20px] md:text-[32px] mb-4 md:mb-8 font-semibold">On demand <span className="text-nbared">basketball projections</span>, looking into the future of the NBA</p>
+                    <p className="text-[18px] md:text-[32px] mb-4 md:mb-8 font-semibold font-momo">On demand <span className="text-nbared">basketball projections</span>, looking into the future of the NBA</p>
                     <p className="text-sm md:text-xl">Search for players, enter their next game, let us predict. <span className="font-bold">Easy!</span></p>
                 </div>
             </FadeSection>

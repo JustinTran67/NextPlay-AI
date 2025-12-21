@@ -51,7 +51,7 @@ export default function PlayerPredict({ name, team, opponent, date, home }) {
             {predictionData ? (
                 <div className="flex flex-col items-center">
                     <div className="mt-12 mb-8">
-                        <h2 className="font-bold w-[350px] md:w-full text-[24px] md:text-[48px] mb-4 opacity-0 animate-fadeUp">
+                        <h2 className="font-bold font-momo w-[350px] md:w-full text-[24px] md:text-[48px] mb-4 opacity-0 animate-fadeUp">
                             <span className="text-nbared">{predictionData.player}</span> vs {predictionData.opponent}
                         </h2>
                     </div>

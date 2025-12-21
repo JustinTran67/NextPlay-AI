@@ -8,6 +8,7 @@ module.exports = {
       // Fonts
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
+        momo: ['"Momo Trust Display"', 'sans-serif'],
       },
       // Custom Colors
       colors: {

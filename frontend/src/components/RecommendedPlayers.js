@@ -19,7 +19,7 @@ export default function RecommendedPlayers({ name, team, opponent }) {
         <FadeSection delay="0.2s">
             <div className="text-[12px] md:text-[16px] flex flex-col items-center mt-40">
                 <div>
-                    <h3 className="text-[24px] font-semibold mb-4">Recommended predictions</h3>
+                    <h3 className="text-[24px] font-semibold font-momo mb-4">Recommended predictions</h3>
                 </div>
                 <div className="w-[350px] md:w-[500px] max-h-[400px] overflow-y-auto bg-secondary rounded-lg shadow-lg scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800 mb-10">
                     <ul className="p-6">
