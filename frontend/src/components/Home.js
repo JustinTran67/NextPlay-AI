@@ -76,7 +76,7 @@ export default function Home() {
 function SearchBar({filterPlayers, setFilterPlayers}) {
     return (
         <div className="opacity-0 animate-fadeUp [animation-delay:0.5s]">
-            <input className="rounded-3xl mb-10 p-2 h-[50px] w-[350px] md:w-[600px] text-[12px] md:text-[16px] px-8 bg-accent placeholder-silver"
+            <input className="rounded-full mb-10 px-6 md:px-8 py-3 md:py-4 w-[350px] md:w-[600px] text-sm md:text-[16px] bg-accent placeholder-silver"
                type="text" value={filterPlayers} onChange={(e) => setFilterPlayers(e.target.value)} placeholder="Search players to get projections..."
             />
         </div>
@@ -109,13 +109,10 @@ function PlayerCard({ name, team }) {
 
     return (
         <div className="">
-            <button className="flex flex-row justify-between rounded-lg p-2 w-[300px] md:w-[400px] text-[12px] md:text-[16px] px-4 text-left bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out mb-2" onClick={handleClick}>
-                <p>
-                    {name}
-                </p>
-                <p>
-                    {team}
-                </p>
+            <button className="flex flex-row justify-between items-center gap-2 md:gap-4 rounded-lg p-2 w-[300px] md:w-[400px] text-xs md:text-sm px-4 text-left bg-accent shadow-lg hover:bg-secondary transition duration-200 ease-in-out mb-2" onClick={handleClick}>
+                <p>{name}</p>
+                <div className="flex-1 h-px bg-white/15" />
+                <p>{team}</p>
             </button>
         </div>
     )
