@@ -82,7 +82,7 @@ def update_database():
                     game_type = row['gameType'] if pd.notnull(row['gameType']) else None,
                     team = row['playerteamCity'] + ' ' + row['playerteamName'],
                     opponent = row['opponentteamCity'] + ' ' + row['opponentteamName'],
-                    win = int(row['win']),
+                    win = int(row['win']) if pd.notnull(row['win']) else None,
                     home = int(row['home']),
                     minutes = parse_float(row['numMinutes']),
                     points = parse_float(row['points']),
