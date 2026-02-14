@@ -109,9 +109,10 @@ def update_database():
         player_name = row['firstName'].strip() + ' ' + row['lastName'].strip()
         player, _ = Player.objects.get_or_create(name=player_name)
 
-        #trade detection
+        #trade detection - only update team for regular season / playoff games
+        game_type = row['gameType'] if row['gameType'] else ''
         current_team = row['playerteamCity'] + ' ' + row['playerteamName']
-        if player.team != current_team:
+        if game_type not in ('All-Star Game', 'Pre Season', 'Preseason', '') and player.team != current_team:
             print(f"[TRADE DETECTED] {player_name} moved from {player.team} to {current_team}")
             player.team = current_team
             player.save()
