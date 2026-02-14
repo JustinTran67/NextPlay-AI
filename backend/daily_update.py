@@ -48,10 +48,50 @@ def parse_float(value):
     except (ValueError, TypeError):
         return None
 
-def update_database():
-    new_data = pd.read_csv("data/PlayerStatistics.csv")
+def parse_minutes(value):
+    """Handle MM:SS format (e.g. '23:31'), decimals, ints, and empty strings."""
+    if value is None or (isinstance(value, float) and math.isnan(value)):
+        return None
+    s = str(value).strip()
+    if s in ('', 'nan'):
+        return None
+    if ':' in s:
+        parts = s.split(':')
+        try:
+            return round(float(parts[0]) + float(parts[1]) / 60, 2)
+        except (ValueError, IndexError):
+            return None
+    return parse_float(s)
 
-    new_data['gameDateTimeEst'] = pd.to_datetime(new_data['gameDateTimeEst'].astype(str).str[:10], errors='coerce').dt.date
+def clean_dataset(df):
+    df['gameDateTimeEst'] = pd.to_datetime(df['gameDateTimeEst'], errors='coerce').dt.date
+
+    for col in ['playerteamCity', 'playerteamName', 'opponentteamCity', 'opponentteamName']:
+        df[col] = df[col].fillna('').astype(str).str.strip()
+    
+    for col in ['gameLabel', 'gameSubLabel', 'gameType']:
+        if col in df.columns:
+            df[col] = df[col].fillna('').astype(str).str.strip()
+    
+    df['numMinutes'] = df['numMinutes'].apply(parse_minutes)
+
+    numeric_cols = [
+        'win', 'home', 'points', 'assists', 'blocks', 'steals',
+        'fieldGoalsAttempted', 'fieldGoalsMade', 'fieldGoalsPercentage',
+        'threePointersAttempted', 'threePointersMade', 'threePointersPercentage',
+        'freeThrowsAttempted', 'freeThrowsMade', 'freeThrowsPercentage',
+        'reboundsDefensive', 'reboundsOffensive', 'reboundsTotal',
+        'foulsPersonal', 'turnovers', 'plusMinusPoints',
+    ]
+    for col in numeric_cols:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce')
+
+    return df
+
+def update_database():
+    new_data = pd.read_csv("data/PlayerStatistics.csv", low_memory=False)
+    new_data = clean_dataset(new_data)
 
     latest_game = PlayerGameStat.objects.order_by('-game_date').first()
     latest_game_date = latest_game.game_date if latest_game else datetime(2025,3,17).date()
@@ -79,7 +119,7 @@ def update_database():
         objs.append(PlayerGameStat(
             player=player,
             game_date = row['gameDateTimeEst'],
-                    game_type = row['gameType'] if pd.notnull(row['gameType']) else None,
+                    game_type = row['gameType'] if row['gameType'] else None,
                     team = row['playerteamCity'] + ' ' + row['playerteamName'],
                     opponent = row['opponentteamCity'] + ' ' + row['opponentteamName'],
                     win = int(row['win']) if pd.notnull(row['win']) else None,
