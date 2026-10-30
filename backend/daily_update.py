@@ -18,6 +18,7 @@ from ml_models.train_model2 import train_and_save_model
 
 HF_REPO = os.getenv("HF_MODEL_REPO")
 MAX_ROWS = int(os.getenv("MAX_ROWS", 15000))
+MIN_ROWS_FOR_PRUNE = 10000  # safety floor so a bad MAX_ROWS can't wipe the player table
 
 # Kaggle credentials
 os.environ['KAGGLE_CONFIG_DIR'] = os.path.expanduser("~/.kaggle")
@@ -152,7 +153,26 @@ def update_database():
         PlayerGameStat.objects.filter(pk__in=[o.pk for o in oldest_objs]).delete()
         print(f"Deleted {excess} oldest rows to maintain MAX_ROWS")
 
+    prune_inactive_players()
+
     return True
+
+def prune_inactive_players():
+    """Remove players with no games left in the MAX_ROWS buffer (retired / long inactive)."""
+    if MAX_ROWS < MIN_ROWS_FOR_PRUNE:
+        print(f"[PRUNE SKIPPED] MAX_ROWS={MAX_ROWS} is below {MIN_ROWS_FOR_PRUNE}, refusing to prune players")
+        return
+
+    inactive = Player.objects.filter(player_game_stats__isnull=True)
+    names = list(inactive.values_list('name', flat=True))
+    if not names:
+        print("No inactive players to prune.")
+        return
+
+    for name in names:
+        print(f"[PLAYER PRUNED] {name}")
+    inactive.delete()
+    print(f"Pruned {len(names)} inactive players with no games in the last {MAX_ROWS} rows")
 
 def retrain_and_upload():
     model_path = train_and_save_model()
